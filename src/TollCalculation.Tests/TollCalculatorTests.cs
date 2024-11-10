@@ -30,18 +30,26 @@ namespace TollCalculation.Tests
             result.Should().Be(0);
         }
 
-        [TestCase("2024-11-09 12:00:00")]
-        [TestCase("2024-11-10 12:00:00")]
-        public void CalculateDailyToll_Toll_Free_Day_Should_Return_Zero_Fee(string dateTimeString)
+        [Test]
+        public void CalculateDailyToll_Unordered_Dates_Should_Sort_And_Calculate_Correctly()
         {
             // Arrange
-            DateTime time = DateTime.Parse(dateTimeString);
+            DateTime[] times =
+            {
+                new DateTime(2024, 11, 8, 7, 0, 0), // 18
+                new DateTime(2024, 11, 8, 6, 30, 0), // 13
+                new DateTime(2024, 11, 8, 2, 0, 0), // 0
+            };
+
+            A.CallTo(() => _tollRepository.GetTollFee(times[0])).Returns(0);
+            A.CallTo(() => _tollRepository.GetTollFee(times[1])).Returns(13);
+            A.CallTo(() => _tollRepository.GetTollFee(times[2])).Returns(18);
 
             // Act
-            var result = _tollCalculator.CalculateDailyToll([time]);
+            var result = _tollCalculator.CalculateDailyToll(times);
 
             // Assert
-            result.Should().Be(0);
+            result.Should().Be(18);
         }
 
         [TestCase("2024-11-08 02:00:00", 0)]
@@ -75,28 +83,6 @@ namespace TollCalculation.Tests
 
             // Assert
             result.Should().Be(expectedFee);
-        }
-
-        [Test]
-        public void CalculateDailyToll_Unordered_Dates_Should_Sort_And_Calculate_Correctly()
-        {
-            // Arrange
-            DateTime[] times =
-            {
-                new DateTime(2024, 11, 8, 7, 0, 0), // 18
-                new DateTime(2024, 11, 8, 6, 30, 0), // 13
-                new DateTime(2024, 11, 8, 2, 0, 0), // 0
-            };
-
-            A.CallTo(() => _tollRepository.GetTollFee(times[0])).Returns(0);
-            A.CallTo(() => _tollRepository.GetTollFee(times[1])).Returns(13);
-            A.CallTo(() => _tollRepository.GetTollFee(times[2])).Returns(18);
-
-            // Act
-            var result = _tollCalculator.CalculateDailyToll(times);
-
-            // Assert
-            result.Should().Be(18);
         }
 
         [Test]

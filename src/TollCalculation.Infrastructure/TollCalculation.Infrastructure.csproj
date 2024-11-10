@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.10" />
+    <PackageReference Include="PublicHoliday" Version="2.41.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,6 +13,7 @@ namespace TollCalculation.API
             builder.Services.AddControllers();
 
             builder.Services.AddPersistence();
+            builder.Services.AddBusinessServices();
 
             var app = builder.Build();
 
