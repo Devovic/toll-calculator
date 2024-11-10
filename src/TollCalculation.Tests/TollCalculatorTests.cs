@@ -1,7 +1,7 @@
-﻿using TollCalculation.Core;
-using FluentAssertions;
+﻿using FluentAssertions;
 using TollCalculation.Core.Interfaces;
 using FakeItEasy;
+using TollCalculation.Core.Services;
 
 namespace TollCalculation.Tests
 {

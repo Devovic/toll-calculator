@@ -1,9 +1,8 @@
 ﻿using TollCalculation.Core.Interfaces;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace TollCalculation.Core
+namespace TollCalculation.Core.Services
 {
-    public class TollCalculator
+    public class TollCalculator : ITollCalculator
     {
         private const int MaxFee = 60;
         private const int FeeIntervalMinutes = 60;
