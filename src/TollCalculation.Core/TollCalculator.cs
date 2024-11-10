@@ -1,4 +1,5 @@
 ﻿using TollCalculation.Core.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TollCalculation.Core
 {
@@ -13,19 +14,19 @@ namespace TollCalculation.Core
             _tollRepository = tollRepository;
         }
 
-        public int CalculateDailyToll(DateTime[] dates)
+        public async Task<int> CalculateDailyToll(DateTime[] dates)
         {
             if (dates == null || dates.Length == 0) return 0;
 
             var sortedTimes = dates.OrderBy(t => t).ToArray();
 
             DateTime intervalStart = dates[0];
-            int tempFee = GetTollFee(intervalStart);
+            int tempFee = await _tollRepository.GetTollFee(intervalStart);
 
             int totalFee = 0;
             foreach (DateTime date in dates.Skip(1))
             {
-                int nextFee = GetTollFee(date);
+                int nextFee = await _tollRepository.GetTollFee(date);
                 int minutes = GetMinutesBetween(intervalStart, date);
 
                 if (minutes < FeeIntervalMinutes)
@@ -45,11 +46,6 @@ namespace TollCalculation.Core
 
             totalFee += tempFee;
             return EnsureMaxFeeLimit(totalFee);
-        }
-
-        public int GetTollFee(DateTime date)
-        {
-            return _tollRepository.GetTollFee(date);
         }
 
         private static int GetMinutesBetween(DateTime start, DateTime end)

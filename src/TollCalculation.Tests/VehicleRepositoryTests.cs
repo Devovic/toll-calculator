@@ -35,10 +35,10 @@ namespace TollCalculation.Tests
         [TestCase("diplomat", true)]
         [TestCase("foreign", true)]
         [TestCase("military", true)]
-        public void GetVehicleByType_Should_Return_Vehicle_When_Type_Exists(string expectedType, bool expectedTollFreeStatus)
+        public async Task GetVehicleByType_Should_Return_Vehicle_When_Type_Exists(string expectedType, bool expectedTollFreeStatus)
         {
             // Act
-            var result = _vehicleRepository.GetVehicleByType(expectedType);
+            var result = await _vehicleRepository.GetVehicleByType(expectedType);
 
             // Assert
             result.Should().NotBeNull();
@@ -47,13 +47,13 @@ namespace TollCalculation.Tests
         }
 
         [Test]
-        public void GetVehicleByType_Should_Return_Null_When_Type_Does_Not_Exist()
+        public async Task GetVehicleByType_Should_Return_Null_When_Type_Does_Not_Exist()
         {
             // Arrange
             var vehicleType = "boat";
 
             // Act
-            var result = _vehicleRepository.GetVehicleByType(vehicleType);
+            var result = await _vehicleRepository.GetVehicleByType(vehicleType);
 
             // Assert
             result.Should().BeNull();

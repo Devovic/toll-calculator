@@ -1,4 +1,5 @@
-﻿using TollCalculation.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using TollCalculation.Core.Entities;
 using TollCalculation.Core.Interfaces;
 using TollCalculation.Infrastructure.Data;
 
@@ -13,9 +14,10 @@ namespace TollCalculation.Infrastructure.Repositories
             _context = context;
             SeedVehicles();
         }
-        public Vehicle? GetVehicleByType(string type)
+        public async Task<Vehicle?> GetVehicleByType(string type)
         {
-            var vehicle = _context.Vehicles.FirstOrDefault(v => v.Type == type);
+            var vehicle = await _context.Vehicles
+                .FirstOrDefaultAsync(v => v.Type == type);
 
             return vehicle;
         }

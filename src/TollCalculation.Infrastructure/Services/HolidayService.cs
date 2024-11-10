@@ -21,12 +21,12 @@ namespace TollCalculation.Infrastructure.Services
             if (IsFreeTollMonth(date.Month))
                 return true;
 
-            if (IsPublicHoliday(date))
+            if (IsHoliday(date))
                 return true;
 
             return false;
         }
-        private bool IsPublicHoliday(DateTime date)
+        private bool IsHoliday(DateTime date)
         {
             return _swedenPublicHoliday.IsPublicHoliday(date);
         }

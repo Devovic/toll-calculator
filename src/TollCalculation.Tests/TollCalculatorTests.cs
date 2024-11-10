@@ -18,20 +18,21 @@ namespace TollCalculation.Tests
             _tollCalculator = new TollCalculator(_tollRepository);
         }
 
-        public void CalculateDailyToll_With_Empty_Dates_Should_Return_Zero_Fee()
+        [Test]
+        public async Task CalculateDailyToll_With_Empty_Dates_Should_Return_Zero_Fee()
         {
             // Arrange
             DateTime[] emptyTimes = [];
 
             // Act
-            var result = _tollCalculator.CalculateDailyToll(emptyTimes);
+            var result = await _tollCalculator.CalculateDailyToll(emptyTimes);
 
             // Assert
             result.Should().Be(0);
         }
 
         [Test]
-        public void CalculateDailyToll_Unordered_Dates_Should_Sort_And_Calculate_Correctly()
+        public async Task CalculateDailyToll_Unordered_Dates_Should_Sort_And_Calculate_Correctly()
         {
             // Arrange
             DateTime[] times =
@@ -46,7 +47,7 @@ namespace TollCalculation.Tests
             A.CallTo(() => _tollRepository.GetTollFee(times[2])).Returns(18);
 
             // Act
-            var result = _tollCalculator.CalculateDailyToll(times);
+            var result = await _tollCalculator.CalculateDailyToll(times);
 
             // Assert
             result.Should().Be(18);
@@ -71,7 +72,7 @@ namespace TollCalculation.Tests
         [TestCase("2024-11-08 18:00:00", 8)]
         [TestCase("2024-11-08 18:29:00", 8)]
         [TestCase("2024-11-08 18:30:00", 0)]
-        public void CalculateDailyToll_Single_Pass_Should_Return_Correct_Fee(string dateTime, int expectedFee)
+        public async Task CalculateDailyToll_Single_Pass_Should_Return_Correct_Fee(string dateTime, int expectedFee)
         {
             // Arrange
             DateTime time = DateTime.Parse(dateTime);
@@ -79,14 +80,14 @@ namespace TollCalculation.Tests
             A.CallTo(() => _tollRepository.GetTollFee(time)).Returns(expectedFee);
 
             // Act
-            var result = _tollCalculator.CalculateDailyToll([time]);
+            var result = await _tollCalculator.CalculateDailyToll([time]);
 
             // Assert
             result.Should().Be(expectedFee);
         }
 
         [Test]
-        public void CalculateDailyToll_Multiple_Passes_Within_60_Minutes_Should_Return_Highest_Fee()
+        public async Task CalculateDailyToll_Multiple_Passes_Within_60_Minutes_Should_Return_Highest_Fee()
         {
             // Arrange
             DateTime[] times =
@@ -101,14 +102,14 @@ namespace TollCalculation.Tests
             A.CallTo(() => _tollRepository.GetTollFee(times[2])).Returns(18);
 
             // Act
-            var result = _tollCalculator.CalculateDailyToll(times);
+            var result = await _tollCalculator.CalculateDailyToll(times);
 
             // Assert
             result.Should().Be(18);
         }
 
         [Test]
-        public void CalculateDailyToll_Multiple_Passes_Exceeding_60_Minutes_Should_Add_Fees_Separately()
+        public async Task CalculateDailyToll_Multiple_Passes_Exceeding_60_Minutes_Should_Add_Fees_Separately()
         {
             // Arrange
             DateTime[] times =
@@ -127,14 +128,14 @@ namespace TollCalculation.Tests
             A.CallTo(() => _tollRepository.GetTollFee(times[4])).Returns(8);
 
             // Act
-            var result = _tollCalculator.CalculateDailyToll(times);
+            var result = await _tollCalculator.CalculateDailyToll(times);
 
             // Assert
             result.Should().Be(39);
         }
 
         [Test]
-        public void CalculateDailyToll_Exceeding_Daily_Max_Fee_Should_Return_Max_Fee()
+        public async Task CalculateDailyToll_Exceeding_Daily_Max_Fee_Should_Return_Max_Fee()
         {
             // Arrange
             DateTime[] times =
@@ -157,7 +158,7 @@ namespace TollCalculation.Tests
             A.CallTo(() => _tollRepository.GetTollFee(times[6])).Returns(18);
 
             // Act
-            var result = _tollCalculator.CalculateDailyToll(times);
+            var result = await _tollCalculator.CalculateDailyToll(times);
 
             // Assert
             result.Should().Be(60);

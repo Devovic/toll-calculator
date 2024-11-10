@@ -47,13 +47,13 @@ namespace TollCalculation.Tests
         [TestCase("2024-11-08 18:00:00", 8)]
         [TestCase("2024-11-08 18:29:00", 8)]
         [TestCase("2024-11-08 18:30:00", 0)]
-        public void GetTollFee_Should_Return_Correct_Fee(string dateTimeString, int expectedFee)
+        public async Task GetTollFee_Should_Return_Correct_Fee(string dateTimeString, int expectedFee)
         {
             // Arrange
             DateTime dateTime = DateTime.Parse(dateTimeString);
 
             // Act
-            var fee = _tollRepository.GetTollFee(dateTime);
+            var fee = await _tollRepository.GetTollFee(dateTime);
 
             // Assert
             fee.Should().Be(expectedFee);

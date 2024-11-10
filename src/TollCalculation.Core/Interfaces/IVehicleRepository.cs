@@ -4,6 +4,6 @@ namespace TollCalculation.Core.Interfaces
 {
     public interface IVehicleRepository
     {
-        Vehicle? GetVehicleByType(string type);
+        Task<Vehicle?> GetVehicleByType(string type);
     }
 }

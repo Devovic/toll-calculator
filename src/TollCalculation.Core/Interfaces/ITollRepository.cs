@@ -2,6 +2,6 @@
 {
     public interface ITollRepository
     {
-        int GetTollFee(DateTime time);
+        Task<int> GetTollFee(DateTime time);
     }
 }

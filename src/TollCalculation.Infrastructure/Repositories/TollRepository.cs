@@ -1,4 +1,5 @@
-﻿using TollCalculation.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using TollCalculation.Core.Entities;
 using TollCalculation.Core.Interfaces;
 using TollCalculation.Infrastructure.Data;
 
@@ -14,13 +15,13 @@ namespace TollCalculation.Infrastructure.Repositories
             SeedTollPrices();
         }
 
-        public int GetTollFee(DateTime time)
+        public async Task<int> GetTollFee(DateTime time)
         {
             var timeOfDay = time.TimeOfDay;
-            var tollFee = _context.TollPrices
+            var tollFee = await _context.TollPrices
                            .Where(p => timeOfDay >= p.StartTime && timeOfDay <= p.EndTime)
                            .Select(p => p.Amount)
-                           .FirstOrDefault();
+                           .FirstOrDefaultAsync();
 
             return tollFee == 0 ? 0 : tollFee;
         }
