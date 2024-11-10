@@ -1,5 +1,7 @@
 ﻿using TollCalculation.Core;
 using FluentAssertions;
+using TollCalculation.Core.Interfaces;
+using FakeItEasy;
 
 namespace TollCalculation.Tests
 {
@@ -7,10 +9,13 @@ namespace TollCalculation.Tests
     public class TollCalculatorTests
     {
         private readonly TollCalculator _tollCalculator;
+        private readonly ITollRepository _tollRepository;
+
 
         public TollCalculatorTests()
         {
-            _tollCalculator = new TollCalculator();
+            _tollRepository = A.Fake<ITollRepository>();
+            _tollCalculator = new TollCalculator(_tollRepository);
         }
 
         public void CalculateDailyToll_With_Empty_Dates_Should_Return_Zero_Fee()
@@ -20,7 +25,7 @@ namespace TollCalculation.Tests
             var vehicle = new Car();
 
             // Act
-            var result = _tollCalculator.CalculateDailyToll(vehicle, null);
+            var result = _tollCalculator.CalculateDailyToll(vehicle, emptyTimes);
 
             // Assert
             result.Should().Be(0);
@@ -83,6 +88,8 @@ namespace TollCalculation.Tests
             DateTime time = DateTime.Parse(dateTime);
             var vehicle = new Car();
 
+            A.CallTo(() => _tollRepository.GetTollFee(time)).Returns(expectedFee);
+
             // Act
             var result = _tollCalculator.CalculateDailyToll(vehicle, [time]);
 
@@ -102,6 +109,10 @@ namespace TollCalculation.Tests
             };
             var vehicle = new Car();
 
+            A.CallTo(() => _tollRepository.GetTollFee(times[0])).Returns(0);
+            A.CallTo(() => _tollRepository.GetTollFee(times[1])).Returns(13);
+            A.CallTo(() => _tollRepository.GetTollFee(times[2])).Returns(18);
+
             // Act
             var result = _tollCalculator.CalculateDailyToll(vehicle, times);
 
@@ -120,6 +131,10 @@ namespace TollCalculation.Tests
                 new DateTime(2024, 11, 8, 7, 10, 0), // 18
             };
             var vehicle = new Car();
+
+            A.CallTo(() => _tollRepository.GetTollFee(times[0])).Returns(8);
+            A.CallTo(() => _tollRepository.GetTollFee(times[1])).Returns(13);
+            A.CallTo(() => _tollRepository.GetTollFee(times[2])).Returns(18);
 
             // Act
             var result = _tollCalculator.CalculateDailyToll(vehicle, times);
@@ -141,6 +156,12 @@ namespace TollCalculation.Tests
                 new DateTime(2024, 11, 8, 18, 00, 0), // 8
             };
             var vehicle = new Car();
+
+            A.CallTo(() => _tollRepository.GetTollFee(times[0])).Returns(8);
+            A.CallTo(() => _tollRepository.GetTollFee(times[1])).Returns(18);
+            A.CallTo(() => _tollRepository.GetTollFee(times[2])).Returns(8);
+            A.CallTo(() => _tollRepository.GetTollFee(times[3])).Returns(13);
+            A.CallTo(() => _tollRepository.GetTollFee(times[4])).Returns(8);
 
             // Act
             var result = _tollCalculator.CalculateDailyToll(vehicle, times);
@@ -164,6 +185,14 @@ namespace TollCalculation.Tests
                 new DateTime(2024, 11, 8, 16, 30, 0), // 18
             };
             var vehicle = new Car();
+
+            A.CallTo(() => _tollRepository.GetTollFee(times[0])).Returns(8);
+            A.CallTo(() => _tollRepository.GetTollFee(times[1])).Returns(8);
+            A.CallTo(() => _tollRepository.GetTollFee(times[2])).Returns(8);
+            A.CallTo(() => _tollRepository.GetTollFee(times[3])).Returns(8);
+            A.CallTo(() => _tollRepository.GetTollFee(times[4])).Returns(8);
+            A.CallTo(() => _tollRepository.GetTollFee(times[5])).Returns(18);
+            A.CallTo(() => _tollRepository.GetTollFee(times[6])).Returns(18);
 
             // Act
             var result = _tollCalculator.CalculateDailyToll(vehicle, times);

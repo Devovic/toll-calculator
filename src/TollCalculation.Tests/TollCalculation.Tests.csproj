@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TollCalculation.Core\TollCalculation.Core.csproj" />
+    <ProjectReference Include="..\TollCalculation.Infrastructure\TollCalculation.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,17 +1,17 @@
-﻿namespace TollCalculation.Core
+﻿using TollCalculation.Core.Interfaces;
+
+namespace TollCalculation.Core
 {
     public class TollCalculator
     {
         private const int MaxFee = 60;
         private const int FeeIntervalMinutes = 60;
+        private readonly ITollRepository _tollRepository;
 
-        /**
-         * Calculate the total toll fee for one day
-         *
-         * @param vehicle - the vehicle
-         * @param dates   - date and time of all passes on one day
-         * @return - the total toll fee for that day
-         */
+        public TollCalculator(ITollRepository tollRepository)
+        {
+            _tollRepository = tollRepository;
+        }
 
         public int CalculateDailyToll(Vehicle vehicle, DateTime[] dates)
         {
@@ -61,21 +61,9 @@
 
         public int GetTollFee(DateTime date, Vehicle vehicle)
         {
-            if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;
+            if (IsTollFreeDate(date) || IsTollFreeVehicle(vehicle)) return 0;;
 
-            int hour = date.Hour;
-            int minute = date.Minute;
-
-            if (hour == 6 && minute >= 0 && minute <= 29) return 8;
-            else if (hour == 6 && minute >= 30 && minute <= 59) return 13;
-            else if (hour == 7 && minute >= 0 && minute <= 59) return 18;
-            else if (hour == 8 && minute >= 0 && minute <= 29) return 13;
-            else if (hour >= 8 && hour <= 14 && minute <= 59) return 8;
-            else if (hour == 15 && minute >= 0 && minute <= 29) return 13;
-            else if (hour == 15 && minute >= 30 || hour == 16 && minute <= 59) return 18;
-            else if (hour == 17 && minute >= 0 && minute <= 59) return 13;
-            else if (hour == 18 && minute >= 0 && minute <= 29) return 8;
-            else return 0;
+            return _tollRepository.GetTollFee(date);
         }
 
         private Boolean IsTollFreeDate(DateTime date)
