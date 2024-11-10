@@ -17,7 +17,7 @@ namespace TollCalculation.Infrastructure.Repositories
         public async Task<Vehicle?> GetVehicleByType(string type)
         {
             var vehicle = await _context.Vehicles
-                .FirstOrDefaultAsync(v => v.Type == type);
+                .FirstOrDefaultAsync(v => v.Type == type.ToLower());
 
             return vehicle;
         }
