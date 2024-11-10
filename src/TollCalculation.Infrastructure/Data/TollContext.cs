@@ -8,5 +8,6 @@ namespace TollCalculation.Infrastructure.Data
         public TollContext(DbContextOptions<TollContext> options) : base(options) { }
 
         public DbSet<TollPrice> TollPrices { get; set; }
+        public DbSet<Vehicle> Vehicles { get; set; }
     }
 }

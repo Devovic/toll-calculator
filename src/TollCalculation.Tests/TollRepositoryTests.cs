@@ -11,18 +11,18 @@ namespace TollCalculation.Tests
         private TollContext _context;
         private TollRepository _tollRepository;
 
-        [SetUp]
-        public void Setup()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             var options = new DbContextOptionsBuilder<TollContext>()
-                .UseInMemoryDatabase(databaseName: "TollDb")
+                .UseInMemoryDatabase(databaseName: "TollDb" + Guid.NewGuid())
                 .Options;
 
             _context = new TollContext(options);
             _tollRepository = new TollRepository(_context);
         }
 
-        [TearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             _context?.Dispose();

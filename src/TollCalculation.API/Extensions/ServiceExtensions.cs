@@ -11,6 +11,7 @@ namespace TollCalculation.API.Extensions
         {
             services.AddDbContext<TollContext>(opt => opt.UseInMemoryDatabase("TollDb"));
             services.AddScoped<ITollRepository, TollRepository>();
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
         }
     }
 }
